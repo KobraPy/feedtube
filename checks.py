@@ -48,7 +48,7 @@ def res_itags(stream):
             itag = "".join(x for x in l[1] if x.isdigit())
             itags[144] = itag
         else:
-            print("")
+            pass
 
   
     return itags

@@ -1,3 +1,4 @@
+from numpy import sort
 from pytube import YouTube, Playlist
 from checks import check_link, res_itags
 from downloads import (download_audio,
@@ -41,23 +42,69 @@ if check == 1:
 # if is a playlist
 elif check == 2:
 
+    resolutions_sets = []
+    resolution_dicts = []
+  
+
     print('----------THATS A PLAYLIST---------')
     type_download = input("    1) To download the videos\n    2) To download the audios only ")
+
+
     if type_download == "1":
-        #check all the videos for the resolution that everyone has.
+
+        #check all the videos for the resolution that eachone has.
         playlist = Playlist(link)
         for video in playlist:
             
-            resolutions = (res_itags(YouTube(link).streams)).keys()
-        
-        
+            #Save the link of video
+            video_link = video
 
+            #res_itags return a dict with the resolutions and the itags
+            res_dict  = res_itags(YouTube(link).streams)
+
+            #Save a list with dictionarys with reolution and itags for each video
+            resolution_dicts.append((res_dict))
+            
+            #transform the resolutions list in a set separate the intersecton between all of them
+            resolutions_sets.append(set(res_dict.keys()))
+   
+    #separate the intersecton between all of resolutions sets
+    resolutions_sets = set.intersection(*resolutions_sets)
+    #change the intersection to a list and sort them
+    resolutions = sorted(list(resolutions_sets))
+
+    #Dict with the possible choices from a user
+    dict_resolution = {}
+
+    #Show the resolutions 
+    print("Choose the option of yor resolution")
+    for count, item in enumerate(resolutions):
+        dict_resolution[count] = item
+        print(count,":",item)
+
+
+    user_choice = input(">")
+    user_res = dict_resolution[int(user_choice)]  
+    
+    video_itag = [link]
+    itags = []
+    for dict in resolution_dicts:
+        itags.append(dict[user_res])
         
-    elif type_download == "2":
+    video_itag.append((itags))
+    
+    
+
+    
+  
+    
+
+            
+    '''elif type_download == "2":
         download_playlist_audios(link)
     else:
-        print("Opção invalida")
-    
+        print("Opção invalida")'''
+
 else:
     print("Invalid link")
 

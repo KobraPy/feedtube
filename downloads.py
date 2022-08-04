@@ -62,53 +62,38 @@ def download_audio(link:str):
     data.streams.get_by_itag(itag).download()
     print("Download finished ...")
 
+def download_playlist_videos(links_and_itag:list):
+    
+    link = links_and_itag[0]
+    playlist = Playlist(link)
 
-def download_playlist_videos():
-    data = Playlist(link)
-    playlist_name = data.title
+    playlist_name = playlist.title
 
     # Create a directory with the name of the playlist 
     if playlist_name not in os.listdir():
         os.mkdir(path = playlist_name)
     else:
         pass
-
+        '''I should make a object with the object to this function with a link and itag
+            to be easy to get them in a for loop        
+        ''' 
+    
     # Iterate inside the Playlist object to get the isoleted links
-    for link in data:
+    for link in playlist:
         count = 0
-    
-        # Use the links to create a Youtube object 
-        data = YouTube(link)
-
+        data  = YouTube(link)
         video_name = data.title
-        video_publi = data.publish_date 
-    
         
-        print(" -------------------------------------------------------")
-        print(video_publi,video_name)
+        data.streams.get_by_itag(140).download(filename="audio", output_path=".\\temporary")
+        print("audio ok")
+        data.streams.get_by_itag(itag_video).download(filename="video", output_path=".\\temporary")
+        print("video ok")
 
-        # Filter the stremas of the video to get the ones with a audio_only chanel and a 128kbps
-        audio_mp4 = data.streams.filter(file_extension="mp4", adaptive=True)
-
-
-
-        video_mp4 = data.streams.filter(file_extension="mp4", type="video", adaptive=True)
-        itag_video = highest_res(video_mp4)
-
+        audio_path = (".\\temporary"+"\\audio")
+        video_path  = (".\\temporary""\\video")
+        # Merge audio and video an put the video name back
+        merging(audio_path=audio_path, video_path=video_path, output_name=video_name)
         
-
-        
-        if video_name+".mp4" not in os.listdir(playlist_name): 
-            print(" -- - Downloading - --")
-            download = data.streams.get_by_itag(itag_music)
-            download.download(output_path=playlist_name)
-        else:
-            print(video_name(  "Allready downloaded !! "))
-            pass
-
-        print("\n")
-
-
 def download_playlist_audios(link):
     '''
                 ---Download audios of a playlist---
