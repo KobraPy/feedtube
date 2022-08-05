@@ -8,6 +8,11 @@ download_playlist_audios,
 clean_up)
 import os
 
+'''
+                ---- This page simulates a GUI with options to be chosen ---
+'''
+
+clean_up()
 
 #Check if a link is a playlist or a video
 link = input("Paste your link and we will see ....")
@@ -63,7 +68,7 @@ elif check == 2:
             res_dict  = res_itags(YouTube(link).streams)
 
             #Save a list with dictionarys with reolution and itags for each video
-            resolution_dicts.append((res_dict))
+            resolution_dicts.append((res_dict, video_link))
             
             #transform the resolutions list in a set separate the intersecton between all of them
             resolutions_sets.append(set(res_dict.keys()))
@@ -82,29 +87,24 @@ elif check == 2:
         dict_resolution[count] = item
         print(count,":",item)
 
-
+    #Get the option for a  resolution chose by the user and check wich is it in dict_resolution
+    #It will have to change with a GUI
     user_choice = input(">")
     user_res = dict_resolution[int(user_choice)]  
     
-    video_itag = [link]
-    itags = []
+    #create a list with the playlist link, and tuples for each video with the video link and the itag
+    #for the resolution chosed by the user
+    itag_link = [link]
     for dict in resolution_dicts:
-        itags.append(dict[user_res])
+        itag_link.append((dict[0][user_res],dict[1]))
+    
+    print(itag_link)
+
+    #download_playlist_videos(itag_link)
+    
         
-    video_itag.append((itags))
     
     
-
-    
-  
-    
-
-            
-    '''elif type_download == "2":
-        download_playlist_audios(link)
-    else:
-        print("Opção invalida")'''
-
 else:
     print("Invalid link")
 

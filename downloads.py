@@ -19,10 +19,13 @@ def clean_up():
 
     if "temporary" in os.listdir():
         print("cleaning temporary")
-        shutil.rmtree("C:\\Users\\outho\\Desktop\\yotube\\temporary")
+        shutil.rmtree(".\\temporary")
         print("Clear")
-        os.mkdir("temporary")
         sleep(3)
+        os.mkdir("temporary")
+    else:
+        print("Creating temporary directory")
+        os.mkdir("temporary")
 
 def download_video(link: str, itag_video:int):
     '''
@@ -63,11 +66,15 @@ def download_audio(link:str):
     print("Download finished ...")
 
 def download_playlist_videos(links_and_itag:list):
+    v = input()
     
-    link = links_and_itag[0]
+    link = links_and_itag[1]
+    v = input()
     playlist = Playlist(link)
-
+    v = input()
+    print(link, playlist)
     playlist_name = playlist.title
+    v = input()
 
     # Create a directory with the name of the playlist 
     if playlist_name not in os.listdir():
@@ -79,22 +86,25 @@ def download_playlist_videos(links_and_itag:list):
         ''' 
     
     # Iterate inside the Playlist object to get the isoleted links
-    for link in playlist:
-        count = 0
-        data  = YouTube(link)
+
+    for itag, video_link in links_and_itag:
+       
+        data  = YouTube(video_link)
         video_name = data.title
-        
+
+        a = input("teste")
         data.streams.get_by_itag(140).download(filename="audio", output_path=".\\temporary")
         print("audio ok")
-        data.streams.get_by_itag(itag_video).download(filename="video", output_path=".\\temporary")
+        data.streams.get_by_itag(itag).download(filename="video", output_path=".\\temporary")
         print("video ok")
 
         audio_path = (".\\temporary"+"\\audio")
-        video_path  = (".\\temporary""\\video")
+        video_path  = (".\\temporary"+"\\video")
         # Merge audio and video an put the video name back
-        merging(audio_path=audio_path, video_path=video_path, output_name=video_name)
+        merging(audio_path=audio_path, video_path=video_path, output_name=playlist_name+"\\"+video_name)
         
 def download_playlist_audios(link):
+
     '''
                 ---Download audios of a playlist---
         This function uses the same trick of the one to download a single audio, it iterates 
@@ -141,3 +151,5 @@ def download_playlist_audios(link):
             pass
 
         print("\n")
+
+
