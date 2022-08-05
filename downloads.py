@@ -49,7 +49,7 @@ def download_video(link: str, itag_video:int):
     audio_path = (".\\temporary"+"\\audio")
     video_path  = (".\\temporary""\\video")
     # Merge audio and video an put the video name back
-    merging(audio_path=audio_path, video_path=video_path, output_name=video_name)
+    merging(audio_path=audio_path, video_path=video_path, output_name=video_name+".mp4")
 
 def download_audio(link:str):
     '''
@@ -66,43 +66,50 @@ def download_audio(link:str):
     print("Download finished ...")
 
 def download_playlist_videos(links_and_itag:list):
-    v = input()
     
-    link = links_and_itag[1]
-    v = input()
+    #get the playlist link to extrac informations
+    link = links_and_itag[0]
     playlist = Playlist(link)
-    v = input()
-    print(link, playlist)
     playlist_name = playlist.title
-    v = input()
+    print(playlist_name)
+    
 
-    # Create a directory with the name of the playlist 
+    # Create a directory with the playlist name
     if playlist_name not in os.listdir():
         os.mkdir(path = playlist_name)
     else:
         pass
-        '''I should make a object with the object to this function with a link and itag
-            to be easy to get them in a for loop        
-        ''' 
+  
+    # Moviepy uses the absolut path and uses the "\\" pattern, so we have to get the path an change the pattern
+    dir_path = os.path.abspath(playlist_name).replace("\\","\\\\")
     
-    # Iterate inside the Playlist object to get the isoleted links
-
-    for itag, video_link in links_and_itag:
+    # Iterate inside the Playlist object to get the isoleted links and itags
+    for itag, video_link in links_and_itag[1:]:
        
         data  = YouTube(video_link)
-        video_name = data.title
+        video_name = (data.title).strip()
 
-        a = input("teste")
-        data.streams.get_by_itag(140).download(filename="audio", output_path=".\\temporary")
+        # Set the name for temporary files of audio e video
+        name_audio = video_name.replace("\"","")+"video"
+        name_video = video_name.replace("\"","")+"audio"
+
+        # Download the audio and video on temporary directory
+        data.streams.get_by_itag(140).download(filename=name_audio, output_path="temporary")
         print("audio ok")
-        data.streams.get_by_itag(itag).download(filename="video", output_path=".\\temporary")
-        print("video ok")
-
-        audio_path = (".\\temporary"+"\\audio")
-        video_path  = (".\\temporary"+"\\video")
-        # Merge audio and video an put the video name back
-        merging(audio_path=audio_path, video_path=video_path, output_name=playlist_name+"\\"+video_name)
         
+        data.streams.get_by_itag(itag).download(filename=name_video, output_path="temporary")
+        print("video ok")
+  
+        # get the path to temporary files
+        audio_path = ("temporary\\\\"+name_audio )
+        video_path  = ("temporary\\\\"+ name_video)
+       
+        print(audio_path,"\n",video_path)
+        
+
+        merging(audio_path=audio_path, video_path=video_path, output_name= dir_path + "\\\\" + video_name + ".mp4")
+        a = input("Stop")
+
 def download_playlist_audios(link):
 
     '''

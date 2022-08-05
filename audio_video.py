@@ -10,7 +10,8 @@ def merging(video_path: str, audio_path:str, output_name:str = ""):
     audio = AudioFileClip(audio_path).set_duration(10)
 
     end = video.set_audio(audio)
-    end.write_videofile(output_name+".mp4")
+    end.write_videofile(output_name
+    )
    
 
 

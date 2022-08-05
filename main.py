@@ -100,7 +100,7 @@ elif check == 2:
     
     print(itag_link)
 
-    #download_playlist_videos(itag_link)
+    download_playlist_videos(itag_link)
     
         
     
